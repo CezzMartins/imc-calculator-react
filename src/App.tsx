@@ -3,14 +3,16 @@ import styles from './App.module.css';
 import imageLogo from './assets/images/powered.png';
 import { GridItem } from './components/GridItem';
 import { levels, calculateImc } from './helpers/imc';
+import { Level } from './types/imcType';
 
 function App() {
   const [heightField, setHeightField] = useState<number>(0);
   const [weigthField, setWeigthField] = useState<number>(0);
+  const [toShow, setToShow] = useState<Level | null>(null);
 
   const handleCalculeteImc = () =>{
     if(heightField && weigthField){
-
+      setToShow(calculateImc(heightField, weigthField));
     }else{
       alert("Digite todos os campos!");
     }
@@ -43,11 +45,20 @@ function App() {
             <button onClick={handleCalculeteImc}>Calcular</button>
           </div>
           <div className={styles.rightSide}>
-            <div className={styles.grid}>
-              {levels.map((item, key) => (
-                <GridItem  key={key} item={item}/>
-              ))}
-            </div>
+            {!toShow &&
+              <div className={styles.grid}>
+                {levels.map((item, key) => (
+                  <GridItem  key={key} item={item}/>
+                ))}
+              </div>
+            }
+            {toShow &&
+              <div className={styles.rightBig}>
+                <div className={styles.rightArrow}></div>
+                <GridItem item={toShow}/>
+              </div>
+            }
+            
           </div>
         </div>
     </div>
